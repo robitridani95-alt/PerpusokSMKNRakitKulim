@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pustaka Digital - SMK NEGERI RAKIT KULIM</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20'/%3E%3C/svg%3E">
+    <!-- Google Fonts: Outfit for UI, Merriweather for Ebook Reader -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #0a0f1c;
+            --bg-darker: #050810;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --accent: #f093fb;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(10, 15, 28, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-darker);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(79, 172, 254, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(240, 147, 251, 0.15), transparent 25%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darker);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-icon {
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1.5s infinite;
+        }
+
+        .loader-text {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Header */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.5rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .school-name {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Search Bar & Admin Button */
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            width: 350px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 30px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .search-container input:focus+i {
+            color: var(--primary);
+        }
+
+        .admin-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-light);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .admin-btn:hover {
+            background: rgba(240, 147, 251, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(240, 147, 251, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 5%;
+            flex: 1;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 2.5rem;
+            border-radius: 24px;
+            background: linear-gradient(rgba(10, 15, 28, 0.7), rgba(10, 15, 28, 0.9)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80') center/cover;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            background: rgba(0, 242, 254, 0.1);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Book Card */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(79, 172, 254, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s ease;
+            background-color: #1e293b;
+            /* Fallback color */
+        }
+
+        .card:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-category {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-content {
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: left;
+            margin-top: auto;
+        }
+
+        /* Reader Modal */
+        #reader-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 8, 16, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #reader-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reader-header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .reader-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reader-title i {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+            background: #ef4444;
+            border-color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+        .reader-content {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .reader-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #333;
+        }
+
+        /* NEW E-BOOK STYLING */
+        .ebook-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+            padding: 3rem 1rem;
+            background: radial-gradient(circle at center, rgba(10, 15, 28, 0.4) 0%, rgba(5, 8, 16, 1) 100%);
+        }
+
+        .ebook-paper {
+            background-color: #fdfaf6;
+            /* Classic warm paper color */
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.05"/%3E%3C/svg%3E');
+            color: #2c2825;
+            width: 100%;
+            max-width: 700px;
+            padding: 4rem 5rem;
+            border-radius: 4px 16px 16px 4px;
+            box-shadow:
+                inset 20px 0 30px rgba(0, 0, 0, 0.08),
+                /* Spine shadow */
+                15px 15px 40px rgba(0, 0, 0, 0.4),
+                /* Outer drop shadow */
+                -2px 0 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            font-family: 'Merriweather', serif;
+            transform-origin: left center;
+        }
+
+        /* Book Binding/Spine visual effect */
+        .ebook-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 50%, transparent 100%);
+            border-radius: 4px 0 0 4px;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations for Page Flipping */
+        @keyframes flipNext {
+            0% {
+                transform: perspective(1200px) rotateY(25deg);
+                opacity: 0.5;
+                filter: brightness(0.8);
+            }
+
+            100% {
+                transform: perspective(1200px) rotateY(0deg);
+                opacity: 1;
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes flipPrev {
+            0% {
+                transform: perspective(1200px) rotateY(-25deg);
+                opacity: 0.5;
+                filter: brightness(0.8);
+            }
+
+            100% {
+                transform: perspective(1200px) rotateY(0deg);
+                opacity: 1;
+                filter: brightness(1);
+            }
+        }
+
+        .ebook-title {
+            font-size: 2.2rem;
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #1a1613;
+            line-height: 1.2;
+        }
+
+        .ebook-author {
+            text-align: center;
+            font-size: 1rem;
+            color: #7a7065;
+            margin-bottom: 2.5rem;
+            font-style: italic;
+            border-bottom: 2px solid #e8e0d5;
+            padding-bottom: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .ebook-text-content {
+            font-size: 1.15rem;
+            line-height: 2.1;
+            text-align: justify;
+            min-height: 400px;
+            color: #3d3834;
+        }
+
+        .ebook-text-content p {
+            margin-bottom: 1.8rem;
+            text-indent: 2rem;
+            /* Classic book indentation */
+        }
+
+        /* Beautiful Drop Cap for first letter of the page */
+        .ebook-text-content p:first-of-type::first-letter {
+            font-size: 4rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            float: left;
+            margin-top: 0.1rem;
+            margin-right: 0.8rem;
+            line-height: 0.8;
+            color: #b45309;
+            /* Rich brown/amber */
+            text-shadow: 2px 2px 0px rgba(180, 83, 9, 0.1);
+        }
+
+        .ebook-footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            color: #999;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 1px;
+            border-top: 1px solid #e8e0d5;
+            padding-top: 1.5rem;
+        }
+
+        .ebook-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .page-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-btn:hover:not([disabled]) {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+            transform: scale(1.05);
+        }
+
+        .page-btn[disabled] {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ADMIN ACTION BAR (EDIT & DELETE) */
+        .admin-action-bar {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+        }
+
+        .admin-btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .btn-edit {
+            background: rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-edit:hover {
+            background: rgba(56, 189, 248, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* ADMIN MODAL CSS */
+        #admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 8, 16, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 1rem;
+        }
+
+        #admin-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .admin-modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #admin-modal.active .admin-modal-content {
+            transform: translateY(0);
+        }
+
+        .admin-modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-modal-content::-webkit-scrollbar-thumb {
+            background: var(--card-border);
+            border-radius: 3px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-light);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(240, 147, 251, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .form-group select option {
+            background: var(--bg-darker);
+            color: var(--text-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--card-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px dashed var(--card-border);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .empty-state h2 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .header-controls {
+                width: 100%;
+            }
+
+            .search-container {
+                flex: 1;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+
+            .card img {
+                height: 220px;
+            }
+
+            .filters {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .ebook-paper {
+                padding: 2rem 1.5rem;
+                border-radius: 8px;
+            }
+
+            .ebook-paper::before {
+                display: none;
+                /* Hide spine on mobile */
+            }
+
+            .ebook-text-content {
+                font-size: 1rem;
+                min-height: 250px;
+            }
+
+            .ebook-title {
+                font-size: 1.8rem;
+            }
+
+            .admin-modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <i class="fas fa-book-open loader-icon"></i>
+        <div class="loader-text">Pustaka Digital</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-book-reader"></i>
+            <div>Pustaka <span class="school-name">SMK NEGERI RAKIT KULIM</span></div>
+        </div>
+        <div class="header-controls">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Cari judul buku, penulis, penerbit...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div id="admin-controls-container" style="display: flex; gap: 10px;">
+                <button class="admin-btn" onclick="openAdminLogin()" title="Portal Admin">
+                    <i class="fas fa-user-shield"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Jendela Dunia di Genggamanmu</h1>
+            <p>Jelajahi ribuan buku pelajaran, asah imajinasimu dengan cerpen, dan lepaskan penat dengan cerita lucu
+                pilihan. Semua bisa dibaca langsung secara interaktif.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all"><i class="fas fa-layer-group"></i> Semua
+                Koleksi</button>
+            <button class="filter-btn" data-filter="SMA"><i class="fas fa-graduation-cap"></i> Buku Pelajaran</button>
+            <button class="filter-btn" data-filter="SMK"><i class="fas fa-tools"></i> Buku Cerita</button>
+            <button class="filter-btn" data-filter="Cerpen"><i class="fas fa-feather-alt"></i> Cerpen</button>
+            <button class="filter-btn" data-filter="Cerita Lucu"><i class="fas fa-laugh-beam"></i> Cerita Lucu</button>
+        </div>
+
+        <!-- Book Grid -->
+        <div class="grid" id="book-grid">
+            <!-- Books will be injected here via JS -->
+        </div>
+    </main>
+
+    <!-- Reader Modal -->
+    <div id="reader-modal">
+        <div class="reader-header">
+            <div class="reader-title"><span id="reader-title">Judul Buku</span></div>
+            <button class="close-btn" onclick="closeReader()" title="Tutup Pembaca (Esc)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="reader-content" id="reader-content">
+            <!-- Content will be injected here (iframe or text) -->
+        </div>
+    </div>
+
+    <!-- Admin Portal Modal -->
+    <div id="admin-modal">
+        <div class="admin-modal-content">
+            <div class="admin-header">
+                <h2><i class="fas fa-plus-circle"></i> Tambah Buku Baru</h2>
+                <button class="close-btn" onclick="closeAdmin()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="add-book-form" onsubmit="saveNewBook(event)">
+                <input type="hidden" id="edit-book-id">
+                <div class="form-group">
+                    <label>Judul Buku</label>
+                    <input type="text" id="book-title" required placeholder="Contoh: Pemrograman Web Lanjut">
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="book-category" required>
+                        <option value="SMA">Buku Pelajaran</option>
+                        <option value="SMK">Buku Cerita</option>
+                        <option value="Cerpen">Cerpen</option>
+                        <option value="Cerita Lucu">Cerita Lucu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Penulis</label>
+                    <input type="text" id="book-author" required placeholder="Nama Penulis">
+                </div>
+                <div class="form-group">
+                    <label>Penerbit</label>
+                    <input type="text" id="book-publisher" required placeholder="Nama Penerbit">
+                </div>
+                <div class="form-group">
+                    <label>Kover Buku (Upload Gambar)</label>
+                    <input type="file" id="book-cover-file" accept="image/*">
+                    <input type="hidden" id="book-cover-data">
+                    <small style="color: var(--text-muted); display: block; margin-top: 5px;">Opsional. Biarkan kosong
+                        untuk membuat kover otomatis, atau mempertahankan kover lama saat edit.</small>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Konten</label>
+                    <select id="book-type" onchange="toggleContentType()" required>
+                        <option value="pdf">Tautan PDF</option>
+                        <option value="text">Teks Cerita (Mode E-Book Interaktif)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="url-group">
+                    <label>URL Dokumen PDF</label>
+                    <input type="text" id="book-url"
+                        placeholder="https://contoh.com/dokumen.pdf atau data:application/pdf...">
+                </div>
+                <div class="form-group" id="text-group" style="display:none;">
+                    <label>Konten Teks (Pisahkan halaman dengan ENTER 2x)</label>
+                    <textarea id="book-text" rows="8"
+                        placeholder="Tulis paragraf pertama untuk halaman 1 di sini...&#10;&#10;Tulis paragraf kedua untuk halaman 2 di sini..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-cloud-upload-alt"></i> Publikasikan
+                    Buku</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Hak Cipta &copy; 2026 Pustaka Digital SMK NEGERI RAKIT KULIM. <br>Didesain dan Dikembangkan <i
+                class="fas fa-heart" style="color:#ef4444"></i> oleh <span>ROBI TRIDANI</span>.</p>
+    </footer>
+
+    <script>
+        // Data Base64 PDF minimalis untuk menjamin PDF 100% selalu berfungsi tanpa error/CORS
+        const base64PDF = "data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PAovVGl0bGUgKER1bW15IFBERikKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDMgMCBSCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbNCAwIFJdCi9Db3VudCAxCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMyAwIFIKL01lZGlhQm94IFswIDAgNTk1IDg0Ml0KL0NvbnRlbnRzIDUgMCBSCi9SZXNvdXJjZXMgPDwKL1Byb2NTZXQgWy9QREYgL1RleHRdCi9Gb250IDw8Ci9GMSA2IDAgUgo+Pgo+Pgo+PgplbmRvYmoKNSAwIG9iago8PCAvTGVuZ3RoIDE1MCA+PgpzdHJlYW0KQlQKL0YxIDI0IFRmCjEwMCA3MDAgVGQKKFBERiBCZXJmdW5nc2kgMTAwJSEpIFRqCjAgLTQwIFRkCihJbmkgYWRhbGFoIGRhdGEgUERGIGR1bW15LikgVGoKMCAtNDAgVGQKKFVudHVrIGJ1a3Ugc2Vrb2xhaCBhc2xpLCkgVGoKMCAtNDAgVGQKKHRpbmdnYWwgZ2FudGkgVVJMLW55YSBkaSBrb2RlLikgVGoKRVQKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovQmFzZUZvbnQgL0hlbHZldGljYQo+PgplbmRvYmoKeHJlZgowIDcKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTYgMDAwMDAgbiAKMDAwMDAwMDEwNiAwMDAwMCBuIAowMDAwMDAwMTYzIDAwMDAwIG4gCjAwMDAwMDAyNzIgMDAwMDAgbiAKMDAwMDAwMDQ3MyAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDcKL1Jvb3QgMiAwIFIKPj4Kc3RhcnR4cmVmCjU1OAolJUVPRgo=";
+
+        // Dummy Data 20 Books with localized dynamic cover images replacing Unsplash
+        const defaultBooks = [
+            // SMA
+            { id: 1, title: "Matematika Kelas X", category: "SMA", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/38bdf8?font=playfair-display&text=Matematika%5CnKelas+X", author: "Dicky Susanto, dkk", publisher: "Pusat Perbukuan Kemdikbudristek" },
+            { id: 2, title: "Bahasa Indonesia Kelas X", category: "SMA", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/38bdf8?font=playfair-display&text=Bahasa+Indonesia%5CnKelas+X", author: "Fadillah Tri Aulia", publisher: "Pusat Perbukuan Kemdikbudristek" },
+            { id: 3, title: "Fisika Kelas XI - Mekanika", category: "SMA", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/38bdf8?font=playfair-display&text=Fisika%5CnKelas+XI", author: "Marianna Magdalena", publisher: "Penerbit Erlangga" },
+            { id: 4, title: "Biologi Kelas XII - Genetika", category: "SMA", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/38bdf8?font=playfair-display&text=Biologi%5CnKelas+XII", author: "Shilviana Ayu", publisher: "Pusat Perbukuan Kemdikbudristek" },
+            { id: 5, title: "Sejarah Indonesia Abad 20", category: "SMA", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/38bdf8?font=playfair-display&text=Sejarah%5CnIndonesia", author: "Sardiman AM", publisher: "Gramedia Widiasarana Indonesia" },
+
+            // SMK
+            { id: 6, title: "Simulasi dan Komunikasi Digital", category: "SMK", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/fbbf24?font=playfair-display&text=Simulasi+Digital", author: "Patwiyanto", publisher: "Penerbit Andi Offset" },
+            { id: 7, title: "Dasar Desain Grafis Nirmana", category: "SMK", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/fbbf24?font=playfair-display&text=Desain+Grafis", author: "Agi Maulana", publisher: "Bumi Aksara" },
+            { id: 8, title: "Pemrograman Web HTML & CSS", category: "SMK", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/fbbf24?font=playfair-display&text=Pemrograman+Web", author: "Rudianto", publisher: "Informatika Bandung" },
+            { id: 9, title: "Sistem Komputer & Arsitektur", category: "SMK", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/fbbf24?font=playfair-display&text=Sistem+Komputer", author: "Budi Sutedjo", publisher: "Penerbit Andi Offset" },
+            { id: 10, title: "Produk Kreatif & Kewirausahaan", category: "SMK", type: "pdf", url: base64PDF, cover: "https://placehold.co/400x600/1e293b/fbbf24?font=playfair-display&text=Kewirausahaan", author: "Yudhistira", publisher: "Penerbit Yudhistira" },
+
+            // Cerpen
+            {
+                id: 11, title: "Senja di Pelabuhan Tua", category: "Cerpen", type: "text", cover: "https://placehold.co/400x600/1e293b/a78bfa?font=playfair-display&text=Senja+di%5CnPelabuhan", author: "Tere Liye", publisher: "Republika Penerbit",
+                content: [
+                    "<p>Matahari mulai meredup di ufuk barat, meninggalkan semburat jingga yang memantul di permukaan laut tenang. Aku duduk di bangku kayu kusam di pinggir pelabuhan tua ini, menunggu kapal yang entah kapan akan merapat.</p><p>Angin sore membawa aroma garam laut yang menyengat, menyatu dengan kenangan usang yang tak pernah benar-benar pudar dari ingatan. Pelabuhan ini menjadi saksi bisu dari jutaan pertemuan dan perpisahan.</p>",
+                    "<p>Sudah lima tahun sejak ia pergi, melambaikan tangan dari atas geladak kapal besi raksasa itu. Berjanji akan kembali saat senja terindah menyapa desa ini. Namun, hingga ribuan senja berlalu, hanya burung camar yang menemaniku memecah kesunyian dermaga.</p><p>Orang-orang kampung bilang aku gila karena terus menunggu sesuatu yang tak pasti. Mereka menyuruhku merelakannya, membiarkan kenangan itu tenggelam bersama matahari.</p>",
+                    "<p>Mungkin janji itu hanyalah buih ombak yang pecah di karang, indah sesaat lalu menghilang. Namun, entah kenapa, hatiku selalu menuntunku kembali ke tempat ini.</p><p>Karena di pelabuhan inilah, perpisahan menjadi satu-satunya pelukan terakhir kami. Dan aku akan terus menunggu, hingga senja berhenti menyapa bumi.</p>"
+                ]
+            },
+            {
+                id: 12, title: "Misteri Rumah Ujung Jalan", category: "Cerpen", type: "text", cover: "https://placehold.co/400x600/1e293b/a78bfa?font=playfair-display&text=Misteri+Rumah", author: "Risa Saraswati", publisher: "Bukune",
+                content: [
+                    "<p>Di ujung jalan kenari, berdiri sebuah rumah besar peninggalan zaman kolonial Belanda yang sudah puluhan tahun tak berpenghuni. Jendela-jendelanya tertutup rapat oleh sulur-sulur ilalang, dan cat putihnya telah mengelupas dimakan waktu, menampilkan bata merah kusam di baliknya.</p><p>Penduduk sekitar tak pernah berani melintas di depannya saat matahari terbenam. Konon, sering terdengar alunan musik klasik dari dalam rumah tersebut.</p>",
+                    "<p>Malam itu, Andi yang terkenal pemberani dan penuh rasa penasaran memutuskan untuk menguji nyalinya. Ia membawa sebuah senter usang milik ayahnya dan melangkah mengendap-endap masuk melalui pintu belakang yang anehnya tak terkunci.</p><p>Bunyi derit engsel pintu yang karatan seakan membelah kesunyian malam, membuat bulu kuduknya tiba-tiba meremang. Ia menelan ludah, menepis ketakutannya.</p>",
+                    "<p>Di tengah ruang tamu, ia melihat sebuah piano tua berdebu. Tanpa ada angin yang bertiup, tiba-tiba terdengar dentingan nada sumbang dari tuts piano tersebut. <i>Ting... ting...</i></p><p>Seketika itu juga senternya mendadak mati total. Dalam kegelapan pekat, Andi mematung ngeri. Ia bisa merasakan hembusan napas yang sangat dingin... tepat menyapu tengkuknya.</p>"
+                ]
+            },
+            {
+                id: 13, title: "Mimpi Sang Pelaut Muda", category: "Cerpen", type: "text", cover: "https://placehold.co/400x600/1e293b/a78bfa?font=playfair-display&text=Mimpi+Pelaut", author: "Andrea Hirata", publisher: "Bentang Pustaka",
+                content: [
+                    "<p>Bagi Budi, lautan bukan sekadar hamparan air asin yang tak berujung, melainkan sebuah kanvas biru tempat ia melukis masa depannya. Sejak kecil, saat anak-anak lain bercita-cita menjadi dokter atau insinyur, ia hanya punya satu mimpi: menjadi kapten kapal penjelajah samudra yang tangguh.</p>",
+                    "<p>Setiap pagi sebelum berangkat ke sekolah, ia duduk menyendiri di pinggir pantai. Ia merobek kertas dari buku tulis lamanya, melipatnya dengan teliti menjadi perahu kertas kecil, lalu menghanyutkannya ke laut.</p><p>Budi sangat percaya bahwa ombak akan membawa perahu-perahu kertas berisi doa-doanya itu ke ujung dunia, menembus badai dan rintangan apa pun.</p>",
+                    "<p>Waktu berlalu begitu cepat. Kini, di usianya yang ke-25, ia tak lagi memegang perahu kertas. Ia berdiri gagah mengenakan seragam putih bersih di atas geladak kapal besi raksasa yang membelah samudera Pasifik.</p><p>Angin kencang menerpa wajahnya yang kini berhias jambang. Perjalanan panjangnya baru saja dimulai, dan mimpinya kini benar-benar berlayar bersamanya mengarungi lautan sungguhan.</p>"
+                ]
+            },
+            {
+                id: 14, title: "Maaf untuk Sahabat", category: "Cerpen", type: "text", cover: "https://placehold.co/400x600/1e293b/a78bfa?font=playfair-display&text=Maaf+Sahabat", author: "Asma Nadia", publisher: "AsmaNadia Publishing House",
+                content: [
+                    "<p>Dina dan Rina adalah definisi dari persahabatan yang abadi. Mereka sudah bersahabat sejak duduk di bangku Taman Kanak-Kanak. Mereka berbagi segalanya: dari bekal makanan, tempat duduk di kelas, hingga rahasia terbesar masing-masing.</p><p>Namun, suatu hari, sebuah kesalahpahaman kecil tentang buku catatan yang hilang membuat mereka berdebat hebat, dan berujung tak saling tegur sapa selama sebulan penuh.</p>",
+                    "<p>Kedua gadis itu sebenarnya saling merindukan, namun ego masa remaja menghalangi mereka untuk meminta maaf lebih dulu. Hingga tibalah hari acara perpisahan kelulusan sekolah.</p><p>Saat sedang turun dari panggung setelah menerima ijazah, Dina tersandung kabel dan terjatuh dengan keras, membuat pergelangan kakinya terkilir parah dan ia tak bisa berdiri.</p>",
+                    "<p>Melihat kejadian itu dari kejauhan, Rina tanpa berpikir panjang langsung berlari menerobos kerumunan yang panik. Ia berlutut membantu Dina berdiri.</p><p>Tanpa kata-kata, pelukan erat yang disertai isak tangis hari itu menghapus semua amarah dan gengsi. Mereka menyadari bahwa persahabatan sejati tak akan pernah bisa dihancurkan hanya karena ego sesaat.</p>"
+                ]
+            },
+            {
+                id: 15, title: "Sepucuk Surat Kertas", category: "Cerpen", type: "text", cover: "https://placehold.co/400x600/1e293b/a78bfa?font=playfair-display&text=Sepucuk+Surat", author: "Boy Candra", publisher: "MediaKita",
+                content: [
+                    "<p>Di sudut kamarku, di dalam sebuah kotak kayu jati berukir klasik, tersimpan ratusan pucuk surat yang tak pernah kukirimkan padamu. Surat-surat itu ditulis dengan tinta biru, berisi jutaan kata rindu yang tertahan.</p><p>Setiap kali kerinduan ini terasa begitu menyesakkan dada, aku hanya bisa mengambil selembar kertas, menulis namamu, dan melipatnya menjadi burung-burung kertas yang bisu.</p>",
+                    "<p>Namun hari ini, di bawah rintik hujan bulan November yang mendinginkan udara kota, aku membulatkan tekad. Aku menyalakan korek api dan memutuskan untuk membakar seluruh isi kotak itu.</p><p>Bukan karena aku telah membencimu, dan sungguh bukan karena aku telah berhasil melupakanmu.</p>",
+                    "<p>Melainkan karena aku akhirnya sadar, menahan rindu sendirian hanya akan melukaiku. Aku membiarkan api melahap kertas-kertas itu. Abu dari surat-surat ini akan terbang bebas terbawa embusan angin.</p><p>Biarlah abu ini yang memelukmu di mana pun kau berada sekarang, menuntaskan kisah rindu yang telah tertahan bertahun-tahun lamanya.</p>"
+                ]
+            },
+
+            // Cerita Lucu
+            {
+                id: 16, title: "Kucing Cerdik Bikin Kesal", category: "Cerita Lucu", type: "text", cover: "https://placehold.co/400x600/1e293b/f472b6?font=playfair-display&text=Kucing+Cerdik", author: "Raditya Dika", publisher: "GagasMedia",
+                content: [
+                    "<p>Seorang bapak tua sangat kesal karena kucing oren milik tetangganya punya hobi aneh: selalu mencuri ikan goreng di meja makannya setiap kali ia lengah ke kamar mandi.</p><p>Suatu hari, sang bapak mendapat ide cemerlang untuk memberi pelajaran. Ia melumuri ikan bandeng goreng dengan sambal rawit ekstra pedas dan menaruhnya di meja sebagai jebakan.</p>",
+                    "<p>Tak lama kemudian, si Kucing Oren datang mengendap-endap. Ia mengendus ikan itu, tampak curiga sesaat, namun kerakusannya menang. Ia langsung melahapnya dalam satu gigitan besar.</p><p>Tiba-tiba matanya melotot kaget, ia mengeong sangat keras melengking, dan lari terbirit-birit menabrak pintu karena kepedesan luar biasa.</p>",
+                    "<p>Sang bapak tertawa puas sambil memegang perutnya. <i>Rasakan lu, kapok kan!</i> batinnya.</p><p>Namun keesokan harinya, bapak itu mendadak pingsan. Pasalnya, si Kucing Oren datang lagi masuk ke rumahnya... dan kali ini kucing itu datang sambil membawa sepiring nasi putih hangat dan segelas es teh manis! <i>\"Ikan pedes kemaren masih ada, Pak?\"</i> meong si kucing.</p>"
+                ]
+            },
+            {
+                id: 17, title: "Jawaban Ujian Kelulusan", category: "Cerita Lucu", type: "text", cover: "https://placehold.co/400x600/1e293b/f472b6?font=playfair-display&text=Jawaban+Ujian", author: "Cak Lontong", publisher: "Mizan Pustaka",
+                content: [
+                    "<p>Suasana kelas 6 SD sedang sangat tegang karena hari itu adalah jadwal ujian lisan mata pelajaran Ilmu Pengetahuan Alam (IPA) untuk penentu kelulusan.</p><p>Ibu Guru berjalan memutar mengelilingi meja murid dengan wajah garang. Ia lalu berhenti tepat di depan meja Budi.</p><p>\"Budi!\" panggil Ibu Guru lantang. \"Coba kamu sebutkan 3 jenis hewan buas yang kamu ketahui!\"</p>",
+                    "<p>Budi berdiri dengan sikap sempurna dan menjawab dengan lantang dan mantap, \"Siap! Harimau, Singa, dan Buaya, Bu!\"</p><p>Ibu Guru tersenyum puas. \"Bagus sekali Budi, jawaban yang tepat. Silakan duduk kembali.\"</p><p>Ibu Guru lalu beralih ke meja Andi yang sedang asyik menggigit ujung pensilnya.</p>",
+                    "<p>\"Nah, sekarang giliranmu Andi. Coba kamu gunakan logikamu, dan sebutkan 3 hewan yang LEBIH buas dari jawaban Budi tadi!\"</p><p>Andi terdiam, berpikir keras sambil menggaruk kepalanya yang tidak gatal. Tiba-tiba matanya berbinar mendapat ide.</p><p>\"Gampang Bu! Jawabannya: Harimau kelaparan, Singa yang lagi kesurupan, dan... Buaya darat putus cinta, Bu!\" Ibu Guru seketika menepuk jidat dan langsung meminum obat sakit kepala.</p>"
+                ]
+            },
+            {
+                id: 18, title: "Tragedi Sepatu Nyala Budi", category: "Cerita Lucu", type: "text", cover: "https://placehold.co/400x600/1e293b/f472b6?font=playfair-display&text=Sepatu+Nyala", author: "Mukidi", publisher: "Penerbit Buku Kompas",
+                content: [
+                    "<p>Budi, seorang anak SD kelas 2, merasa menjadi orang paling keren di kampungnya karena baru saja dibelikan sepatu baru yang bagian bawahnya bisa menyala kelap-kelip merah biru saat diinjak.</p><p>Sore harinya, outer berjalan keliling kampung, sengaja menghentakkan kakinya sekuat tenaga ke tanah seperti orang baris-berbaris hanya agar sepatunya menyala dan dilihat orang.</p>",
+                    "<p>Saat ia lewat di depan pos ronda yang sedang ramai oleh bapak-bapak yang sedang main catur, Pak RT yang iseng sengaja bertanya keras-keras.</p><p>\"Wah wah wah, sepatu baru nih Bud? Keren banget kok bisa nyala terang benderang kayak lampu disko gitu?\"</p>",
+                    "<p>Dengan sombong tingkat dewa, Budi berkacak pinggang dan menjawab lantang, \"Iya dong Pak RT! Ini sepatunya canggih luar negeri, nyalanya pakai tenaga dalam!\"</p><p>Bapak-bapak ronda langsung bertepuk tangan kagum. Padahal dalam hatinya, Budi saat itu sedang panik menangis minta tolong. Ternyata sepatunya error tak mau mati nyalanya gara-gara tadi Budi tak sengaja kejeblos ke dalam selokan yang becek!</p>"
+                ]
+            },
+            {
+                id: 19, title: "Murid Teladan Salah Kelas", category: "Cerita Lucu", type: "text", cover: "https://placehold.co/400x600/1e293b/f472b6?font=playfair-display&text=Salah+Kelas", author: "Shitlicious", publisher: "Bukune",
+                content: [
+                    "<p>Hari pertama Masa Orientasi di bangku SMA. Anton, si murid teladan kebanggaan SMP-nya, datang dengan semangat 45. Seragamnya dimasukkan rapi, rambut klimis disisir belah pinggir.</p><p>Tanpa melihat papan nama di depan, ia melangkah mantap masuk ke ruang kelas terdekat yang pintunya terbuka. Ia duduk tegak di bangku paling depan barisan tengah.</p>",
+                    "<p>Tak lama kemudian, seorang pengajar masuk. Anton langsung mengeluarkan buku catatan tebal dan pulpen warna-warninya. Ia fokus mencatat setiap kata dan diagram yang ditulis pengajar tersebut di papan tulis tanpa berkedip.</p><p>Sekitar lima belas menit berlalu dengan sangat khusyuk.</p>",
+                    "<p>Pengajar itu meletakkan spidolnya, berbalik menatap seisi ruangan, lalu bertanya dengan suara lembut:</p><p>\"Baiklah mahasiswi sekalian, apakah ada yang ingin ditanyakan mengenai tahapan Praktek Persalinan Sungsang ini?\"</p><p>Anton seketika pucat pasih, pulpennya terjatuh. Barulah ia sadar ia dikelilingi perempuan dewasa berseragam putih-putih. Ternyata ia nyasar masuk ke kelas Akademi Kebidanan yang kampusnya persis bersebelahan dengan SMA barunya!</p>"
+                ]
+            },
+            {
+                id: 20, title: "Kecurangan Lomba Hutan", category: "Cerita Lucu", type: "text", cover: "https://placehold.co/400x600/1e293b/f472b6?font=playfair-display&text=Kecurangan+Lomba", author: "Bintang Emon", publisher: "Gramedia Pustaka Utama",
+                content: [
+
+                ]
+            }
+        ];
+
+        // State Manager
+        let allBooks = [];
+        let isAdmin = false;
+
+        // Elements
+        const grid = document.getElementById('book-grid');
+        const searchInput = document.getElementById('search-input');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const readerModal = document.getElementById('reader-modal');
+        const readerTitle = document.getElementById('reader-title');
+        const readerContent = document.getElementById('reader-content');
+        const loader = document.getElementById('loader');
+        const adminModal = document.getElementById('admin-modal');
+
+        // Ebook Reader State
+        let currentEbookContent = [];
+        let currentEbookPage = 0;
+        let currentEbookTitle = "";
+        let currentEbookAuthor = "";
+        let currentEbookPublisher = "";
+
+        // IndexedDB Manager
+        const DB_NAME = 'PustakaDigitalDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'books';
+        let dbInstance = null;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    }
+                };
+
+                request.onsuccess = (e) => {
+                    dbInstance = e.target.result;
+                    resolve(dbInstance);
+                };
+
+                request.onerror = (e) => {
+                    console.error("IndexedDB error:", e.target.error);
+                    reject(e.target.error);
+                };
+            });
+        }
+
+        async function getAllBooksFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = dbInstance.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveBooksToDB(booksArray) {
+            return new Promise((resolve, reject) => {
+                const transaction = dbInstance.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+
+                store.clear();
+                booksArray.forEach(book => {
+                    store.put(book);
+                });
+
+                transaction.oncomplete = () => resolve();
+                transaction.onerror = () => reject(transaction.error);
+            });
+        }
+
+        // Initialization
+        async function initData() {
+            try {
+                await initDB();
+                let storedBooks = await getAllBooksFromDB();
+
+                // Migrate from localStorage if IndexedDB is empty
+                if (storedBooks.length === 0) {
+                    const localData = localStorage.getItem('pustaka_books');
+                    if (localData) {
+                        try {
+                            storedBooks = JSON.parse(localData);
+                            await saveBooksToDB(storedBooks);
+                        } catch (e) {
+                            console.error("Gagal memigrasi data lokal", e);
+                        }
+                    }
+                }
+
+                if (storedBooks.length === 0) {
+                    storedBooks = [...defaultBooks];
+                    await saveBooksToDB(storedBooks);
+                }
+
+                // Sort by ID descending so newest books appear first
+                allBooks = storedBooks.sort((a, b) => b.id - a.id);
+            } catch (e) {
+                console.error("Database initialization failed:", e);
+                allBooks = [...defaultBooks];
+            }
+        }
+
+        // Remove Loader on window load and init
+        window.addEventListener('load', async () => {
+            await initData();
+
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    renderBooks(allBooks); // Render after loader hides
+                }, 500);
+            }, 1000);
+        });
+
+        // Render Books Grid
+        function renderBooks(booksToRender) {
+            grid.innerHTML = '';
+            if (booksToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search-minus"></i>
+                        <h2>Buku tidak ditemukan</h2>
+                        <p>Coba gunakan kata kunci lain untuk pencarian Anda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            booksToRender.forEach((book, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openReader(book.id);
+                // Animation setup
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                let adminActions = '';
+                if (isAdmin) {
+                    adminActions = `
+                        <div class="admin-action-bar">
+                            <button class="admin-btn-action btn-edit" title="Edit Buku" onclick="event.stopPropagation(); editBook(${book.id})"><i class="fas fa-pen"></i></button>
+                            <button class="admin-btn-action btn-delete" title="Hapus Buku" onclick="event.stopPropagation(); deleteBook(${book.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    ${adminActions}
+                    <div class="card-category">${book.category}</div>
+                    <img src="${book.cover}" alt="${book.title}" loading="lazy">
+                    <div class="card-content">
+                        <h3>${book.title}</h3>
+                        <p style="margin-bottom: 6px;"><i class="fas fa-user-edit" style="font-size:0.8em; margin-right:4px;"></i>${book.author}</p>
+                        <p><i class="fas fa-building" style="font-size:0.8em; margin-right:4px;"></i>${book.publisher}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                // Trigger animation
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 40); // slightly faster stagger
+            });
+        }
+
+        // Search & Filter functionality
+        searchInput.addEventListener('input', () => filterData());
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                const targetBtn = e.target.closest('.filter-btn');
+                targetBtn.classList.add('active');
+                filterData();
+            });
+        });
+
+        function filterData() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+
+            const filteredBooks = allBooks.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.publisher.toLowerCase().includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || book.category === activeFilter;
+                return matchesSearch && matchesFilter;
+            });
+            renderBooks(filteredBooks);
+        }
+
+        // --- E-BOOK READER LOGIC ---
+
+        function openReader(id) {
+            const book = allBooks.find(b => b.id === id);
+            if (!book) return;
+
+            // Set Title icon based on type
+            readerTitle.innerHTML = book.type === 'pdf'
+                ? `<i class="fas fa-file-pdf" style="color:#ef4444;"></i> ${book.title}`
+                : `<i class="fas fa-book-open" style="color:var(--primary);"></i> ${book.title}`;
+
+            // Show loading spinner
+            readerContent.innerHTML = `
+                <div style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--primary); font-size:3rem;">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            `;
+
+            document.body.style.overflow = 'hidden';
+            readerModal.classList.add('active');
+
+            // Render content
+            setTimeout(() => {
+                if (book.type === 'pdf') {
+                    // Render PDF via Iframe
+                    let finalUrl = book.url;
+                    // Auto-append toolbar hidden params for standard pdfs (if not base64)
+                    if (finalUrl.endsWith('.pdf')) {
+                        finalUrl += "#toolbar=0&navpanes=0&scrollbar=0";
+                    }
+                    readerContent.innerHTML = `<iframe src="${finalUrl}" title="${book.title}"></iframe>`;
+                } else if (book.type === 'text') {
+                    // Setup Paginated Ebook Data
+                    currentEbookContent = book.content;
+                    currentEbookPage = 0;
+                    currentEbookTitle = book.title;
+                    currentEbookAuthor = book.author;
+                    currentEbookPublisher = book.publisher;
+                    renderEbookPage('next'); // initial render
+                }
+            }, 400);
+        }
+
+        function renderEbookPage(direction) {
+            // Build the Ebook UI
+            const contentHtml = `
+                <div class="ebook-wrapper">
+                    <div class="ebook-paper" id="ebook-paper">
+                        ${currentEbookPage === 0 ? `
+                            <h2 class="ebook-title">${currentEbookTitle}</h2>
+                            <div class="ebook-author">
+                                Ditulis oleh: <strong>${currentEbookAuthor}</strong><br>
+                                <span style="font-size: 0.85em; opacity: 0.7; display: inline-block; margin-top: 5px;">Penerbit: ${currentEbookPublisher}</span>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="ebook-text-content">
+                            ${currentEbookContent[currentEbookPage]}
+                        </div>
+                        
+                        <div class="ebook-footer">
+                            Halaman ${currentEbookPage + 1} dari ${currentEbookContent.length}
+                        </div>
+                    </div>
+                    
+                    <div class="ebook-controls">
+                        <button class="page-btn" onclick="prevPage()" ${currentEbookPage === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <button class="page-btn" onclick="nextPage()" ${currentEbookPage === currentEbookContent.length - 1 ? 'disabled' : ''}>
+                            Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            readerContent.innerHTML = contentHtml;
+
+            // Trigger 3D Page Turn Animation
+            const paper = document.getElementById('ebook-paper');
+            // Force browser reflow to restart animation
+            paper.style.animation = 'none';
+            void paper.offsetWidth;
+            paper.style.animation = direction === 'next'
+                ? 'flipNext 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards'
+                : 'flipPrev 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+        }
+
+        function nextPage() {
+            if (currentEbookPage < currentEbookContent.length - 1) {
+                currentEbookPage++;
+                renderEbookPage('next');
+            }
+        }
+
+        function prevPage() {
+            if (currentEbookPage > 0) {
+                currentEbookPage--;
+                renderEbookPage('prev');
+            }
+        }
+
+        function closeReader() {
+            readerModal.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                readerContent.innerHTML = ''; // Clean up memory
+            }, 400);
+        }
+
+        // Close reader or admin on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (readerModal.classList.contains('active')) {
+                    closeReader();
+                } else if (adminModal.classList.contains('active')) {
+                    closeAdmin();
+                }
+            }
+            // Keyboard navigation for ebook
+            if (readerModal.classList.contains('active') && currentEbookContent.length > 0) {
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === 'ArrowLeft') prevPage();
+            }
+        });
+
+        // --- ADMIN PORTAL LOGIC ---
+
+        function openAdminLogin() {
+            if (isAdmin) return;
+            const password = prompt("SILAKAN MASUKKAN KATA SANDI PORTAL ADMIN:\n(Hint: ketik 'admin123')");
+            if (password === "admin123") {
+                isAdmin = true;
+                updateAdminUI();
+            } else if (password !== null) {
+                alert("Akses Ditolak! Kata sandi salah.");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            updateAdminUI();
+        }
+
+        function updateAdminUI() {
+            const adminControls = document.getElementById('admin-controls-container');
+            if (isAdmin) {
+                adminControls.innerHTML = `
+                    <button class="admin-btn" style="background: rgba(0, 242, 254, 0.2); border-color: var(--primary); color: var(--primary);" onclick="openAddBook()" title="Tambah Buku Baru">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="admin-btn" style="background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444;" onclick="logoutAdmin()" title="Keluar Mode Admin">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                `;
+            } else {
+                adminControls.innerHTML = `
+                    <button class="admin-btn" onclick="openAdminLogin()" title="Portal Admin">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                `;
+            }
+            // Re-render books to show/hide edit delete buttons
+            filterData();
+        }
+
+        function openAddBook() {
+            document.getElementById('edit-book-id').value = '';
+            document.getElementById('add-book-form').reset();
+            document.querySelector('.admin-header h2').innerHTML = `<i class="fas fa-plus-circle"></i> Tambah Buku Baru`;
+            document.querySelector('.submit-btn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> Publikasikan Buku`;
+            toggleContentType();
+            adminModal.classList.add('active');
+        }
+
+        function editBook(id) {
+            const book = allBooks.find(b => b.id === id);
+            if (!book) return;
+
+            document.getElementById('edit-book-id').value = book.id;
+            document.getElementById('book-title').value = book.title;
+            document.getElementById('book-category').value = book.category;
+            document.getElementById('book-author').value = book.author;
+            document.getElementById('book-publisher').value = book.publisher;
+            document.getElementById('book-cover-data').value = book.cover;
+            document.getElementById('book-type').value = book.type;
+
+            toggleContentType();
+
+            if (book.type === 'pdf') {
+                document.getElementById('book-url').value = book.url;
+                document.getElementById('book-text').value = '';
+            } else {
+                document.getElementById('book-url').value = '';
+                const rawText = book.content.map(p => p.replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/<br>/g, '\n')).join('\n\n');
+                document.getElementById('book-text').value = rawText;
+            }
+
+            document.querySelector('.admin-header h2').innerHTML = `<i class="fas fa-pen"></i> Edit Buku`;
+            document.querySelector('.submit-btn').innerHTML = `<i class="fas fa-save"></i> Simpan Perubahan`;
+            adminModal.classList.add('active');
+        }
+
+        async function deleteBook(id) {
+            const book = allBooks.find(b => b.id === id);
+            if (!book) return;
+
+            if (confirm(`Yakin ingin menghapus buku "${book.title}"?`)) {
+                allBooks = allBooks.filter(b => b.id !== id);
+                try {
+                    await saveBooksToDB(allBooks);
+                } catch (e) {
+                    console.error("Gagal menghapus dari database", e);
+                }
+                filterData();
+            }
+        }
+
+        function closeAdmin() {
+            adminModal.classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('add-book-form').reset();
+                document.getElementById('edit-book-id').value = '';
+                toggleContentType(); // Reset form views
+            }, 400);
+        }
+
+        function toggleContentType() {
+            const type = document.getElementById('book-type').value;
+            if (type === 'pdf') {
+                document.getElementById('url-group').style.display = 'block';
+                document.getElementById('book-url').required = true;
+
+                document.getElementById('text-group').style.display = 'none';
+                document.getElementById('book-text').required = false;
+            } else {
+                document.getElementById('url-group').style.display = 'none';
+                document.getElementById('book-url').required = false;
+
+                document.getElementById('text-group').style.display = 'block';
+                document.getElementById('book-text').required = true;
+            }
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400; // max width for cover
+                        const scaleSize = MAX_WIDTH / img.width;
+                        let width = MAX_WIDTH;
+                        let height = img.height * scaleSize;
+
+                        // If image is already smaller, don't upscale
+                        if (img.width < MAX_WIDTH) {
+                            width = img.width;
+                            height = img.height;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        // Compress to JPEG with 0.7 quality
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                };
+            });
+        }
+
+        async function saveNewBook(e) {
+            e.preventDefault(); // Prevent page reload
+
+            const editId = document.getElementById('edit-book-id').value;
+            const type = document.getElementById('book-type').value;
+            const category = document.getElementById('book-category').value;
+            const title = document.getElementById('book-title').value.trim();
+
+            // Handle cover image upload
+            const fileInput = document.getElementById('book-cover-file');
+            let coverUrl = document.getElementById('book-cover-data').value; // Get existing or hidden
+
+            if (fileInput.files && fileInput.files[0]) {
+                // Compress image before saving
+                coverUrl = await compressImage(fileInput.files[0]);
+            }
+
+            // Auto-generate cover if still empty
+            if (!coverUrl) {
+                const titleLines = encodeURIComponent(title).replace(/%20/g, '%5Cn');
+                let colorHex = '38bdf8'; // SMA
+                if (category === 'SMK') colorHex = 'fbbf24';
+                if (category === 'Cerpen') colorHex = 'a78bfa';
+                if (category === 'Cerita Lucu') colorHex = 'f472b6';
+                coverUrl = `https://placehold.co/400x600/1e293b/${colorHex}?font=playfair-display&text=${titleLines}`;
+            }
+
+            // Build new book object
+            const newBook = {
+                id: editId ? parseInt(editId) : Date.now(), // Generate unique ID
+                title: title,
+                category: category,
+                author: document.getElementById('book-author').value.trim(),
+                publisher: document.getElementById('book-publisher').value.trim(),
+                cover: coverUrl,
+                type: type
+            };
+
+            // Handle specific content based on type
+            if (type === 'pdf') {
+                newBook.url = document.getElementById('book-url').value.trim();
+            } else {
+                // Parse text into pages based on double-enters
+                const rawText = document.getElementById('book-text').value.trim();
+                const paragraphs = rawText.split(/\n\s*\n/);
+                // Wrap each chunk in <p> tags
+                newBook.content = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`);
+            }
+
+            if (editId) {
+                // Update existing
+                const index = allBooks.findIndex(b => b.id === parseInt(editId));
+                if (index !== -1) {
+                    allBooks[index] = newBook;
+                }
+                alert(`Perubahan pada buku "${newBook.title}" berhasil disimpan.`);
+            } else {
+                allBooks.unshift(newBook);
+                alert(`Berhasil! Buku "${newBook.title}" telah ditambahkan ke Pustaka Digital.`);
+            }
+
+            try {
+                await saveBooksToDB(allBooks);
+            } catch (e) {
+                console.error("Gagal menyimpan ke database", e);
+                alert("Peringatan: Gagal menyimpan data ke database browser. Memori mungkin penuh.");
+            }
+
+            // Feedback and cleanup
+            closeAdmin();
+
+            // Re-apply current filter and search
+            filterData();
+        }
+
+    </script>
+</body>
+
+</html>
